@@ -19,12 +19,12 @@ public class PercolationStats {
                         StdRandom.uniform(n) + 1
                 );
             }
-            results[i] = (double)p.numberOfOpenSites() / totalOpen;
+            results[i] = (double) p.numberOfOpenSites() / totalOpen;
         }
 
         this.mean = StdStats.mean(results);
         this.stdDev = StdStats.stddev(results);
-        double threshold = 1.96 * stdDev /  Math.sqrt(trials);
+        double threshold = 1.96 * stdDev / Math.sqrt(trials);
         this.confidenceLo = mean - threshold;
         this.confidenceHi = mean + threshold;
     }

@@ -5,7 +5,7 @@ public class Percolation {
     private final WeightedQuickUnionUF finder;
 
     // creates n-by-n grid, with all sites initially blocked
-    public Percolation(int n) {
+    public Percolation(final int n) {
         if (n <= 0) {
             throw new IllegalArgumentException("Grid cannot be less than zero");
         }
@@ -20,12 +20,12 @@ public class Percolation {
     }
 
     // opens the site (row, col) if it is not open already
-    public void open(int row, int col) {
+    public void open(final int row, final int col) {
         if (isOutside(row) || isOutside(col)) {
             throw new IllegalArgumentException("Index is outside of the grid");
         }
-        int i = row - 1;
-        int j = col - 1;
+        final int i = row - 1;
+        final int j = col - 1;
         if (grid[i][j]) {
             return;
         }
