@@ -9,6 +9,9 @@ public class PercolationStats {
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
+        if (trials <= 0) {
+            throw new IllegalArgumentException("Number of trials should be more than zero");
+        }
         double[] results = new double[trials]; // how many open sites, when percolated;
         double totalOpen = n * n;
         for (int i = 0; i < trials; i++) {
