@@ -1,10 +1,11 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
+    private static final int TOP = 0;
     private boolean[][] grid;
     private final WeightedQuickUnionUF finder;
     private int openSites;
-    private final static int top = 0;
+
     private final int bottom;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -57,7 +58,7 @@ public class Percolation {
             finder.union(thisCell, rightNeighbour);
         }
         if (row == 1) {
-            finder.union(top, thisCell);
+            finder.union(TOP, thisCell);
         }
         if (row == grid.length) {
             finder.union(thisCell, bottom);
@@ -78,7 +79,7 @@ public class Percolation {
             throw new IllegalArgumentException("Index is outside of the grid");
         }
         int flatCoordinate = flattenCoordinates(row, col);
-        return finder.find(top) == finder.find(flatCoordinate);
+        return finder.find(TOP) == finder.find(flatCoordinate);
     }
 
     // returns the number of open sites
@@ -88,7 +89,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return finder.find(top) == finder.find(bottom);
+        return finder.find(TOP) == finder.find(bottom);
     }
 
     private int flattenCoordinates(final int row, final int col) {
