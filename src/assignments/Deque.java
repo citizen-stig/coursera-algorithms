@@ -21,7 +21,8 @@ public class Deque<Item> implements Iterable<Item> {
 
     public void addFirst(Item item) {
         if (head == null) {
-            head = tail = new Node(item);
+            head = new Node(item);
+            tail = head;
         } else {
             head = new Node(item, head);
         }
@@ -30,7 +31,8 @@ public class Deque<Item> implements Iterable<Item> {
 
     public void addLast(Item item) {
         if (tail == null) {
-            head = tail = new Node(item);
+            tail = new Node(item);
+            head = tail;
         } else {
             tail = new Node(tail, item);
         }
@@ -111,6 +113,9 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Node(Item item, Node next) {
+            if (item == null) {
+                throw new IllegalArgumentException("item cannot be null");
+            }
             this.item = item;
             this.next = next;
             next.previous = this;
@@ -131,15 +136,15 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
-        private Node next;
+        private Node nextNode;
 
         public ListIterator() {
-            this.next = head;
+            this.nextNode = head;
         }
 
         @Override
         public boolean hasNext() {
-            return next != null;
+            return nextNode != null;
         }
 
         @Override
@@ -149,11 +154,11 @@ public class Deque<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            if (next == null) {
+            if (nextNode == null) {
                 throw new NoSuchElementException();
             }
-            Node next = this.next;
-            this.next = next.next;
+            Node next = this.nextNode;
+            this.nextNode = next.next;
             return next.item;
         }
     }
