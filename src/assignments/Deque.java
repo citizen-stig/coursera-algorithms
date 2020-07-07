@@ -74,30 +74,10 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private void print() {
-        for (Item item: this) {
+        for (Item item : this) {
             System.out.print(String.format("'%s' ", item));
         }
         System.out.println();
-    }
-
-
-    // unit testing (required)
-    public static void main(String[] args) {
-        Deque<String> d = new Deque<String>();
-        System.out.println(d.isEmpty());
-        d.addFirst("First");
-        d.addFirst("Pre First");
-        d.addFirst("Another Pre First");
-        d.addLast("Last");
-        d.addLast("Add Another Last");
-        System.out.println("----");
-        d.print();
-        System.out.println("----");
-        System.out.println(d.removeFirst());
-        d.print();
-        System.out.println("----");
-        System.out.println(d.removeLast());
-        d.print();
     }
 
     private class Node {
@@ -113,16 +93,13 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Node(Item item, Node next) {
-            if (item == null) {
-                throw new IllegalArgumentException("item cannot be null");
-            }
-            this.item = item;
+            this(item);
             this.next = next;
             next.previous = this;
         }
 
         public Node(Node previous, Item item) {
-            this.item = item;
+            this(item);
             this.previous = previous;
             previous.next = this;
         }
@@ -163,4 +140,22 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
+    // unit testing (required)
+    public static void main(String[] args) {
+        Deque<String> d = new Deque<String>();
+        System.out.println(d.isEmpty());
+        d.addFirst("First");
+        d.addFirst("Pre First");
+        d.addFirst("Another Pre First");
+        d.addLast("Last");
+        d.addLast("Add Another Last");
+        System.out.println("----");
+        d.print();
+        System.out.println("----");
+        System.out.println(d.removeFirst());
+        d.print();
+        System.out.println("----");
+        System.out.println(d.removeLast());
+        d.print();
+    }
 }
