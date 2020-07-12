@@ -1,9 +1,12 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PointTest {
+    // Compare
     @Test
     void compareToRightUp() {
         Point zero = new Point(0, 0);
@@ -28,6 +31,7 @@ public class PointTest {
         assertTrue(rightUp.compareTo(zero) > 0);
     }
 
+    // SLOPE
     @Test
     void slopeToRightUp() {
         Point zero = new Point(0, 0);
@@ -62,5 +66,19 @@ public class PointTest {
 
         assertEquals(-1.0, zero.slopeTo(rightBelow));
         assertEquals(-1.0, rightBelow.slopeTo(zero));
+    }
+
+    // Comparator
+
+    @Test
+    void comparatorFromZero() {
+        Point zero = new Point(0, 0);
+        Comparator<Point> comparator = zero.slopeOrder();
+
+        Point one = new Point(5, 1);
+        Point two = new Point(3, 5);
+        assertTrue(comparator.compare(one, two) < 0);
+
+
     }
 }
