@@ -46,8 +46,16 @@ public class PointTest {
         Point zero = new Point(0, 0);
         Point above = new Point(0, 10);
 
-        assertEquals(Double.POSITIVE_INFINITY, zero.slopeTo(above));
-        assertEquals(Double.NEGATIVE_INFINITY, above.slopeTo(zero));
+        assertEquals(Double.NEGATIVE_INFINITY, zero.slopeTo(above));
+        assertEquals(Double.POSITIVE_INFINITY, above.slopeTo(zero));
+    }
+
+    @Test
+    void anotherVerticalLine() {
+        Point p = new Point(444, 431);
+        Point q = new Point(444, 364);
+
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
     }
 
     @Test
@@ -55,8 +63,23 @@ public class PointTest {
         Point zero = new Point(0, 0);
         Point onTheRight = new Point(10, 0);
 
-        assertEquals(+0.0, zero.slopeTo(onTheRight));
-        assertEquals(-0.0, onTheRight.slopeTo(zero));
+        assertEquals(-0.0, zero.slopeTo(onTheRight));
+        assertEquals(+0.0, onTheRight.slopeTo(zero));
+    }
+
+    @Test
+    void anotherHorizontalLine() {
+        Point p = new Point(435, 330);
+        Point q =  new Point(79, 330);
+        assertEquals(+0.0, p.slopeTo(q));
+    }
+
+    @Test
+    void toItself() {
+        Point p = new Point(319, 57);
+        Point q = new Point(319, 57);
+
+        assertEquals(Double.NEGATIVE_INFINITY, p.slopeTo(q));
     }
 
     @Test
