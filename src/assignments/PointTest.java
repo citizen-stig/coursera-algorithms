@@ -101,7 +101,16 @@ public class PointTest {
         Point one = new Point(5, 1);
         Point two = new Point(3, 5);
         assertTrue(comparator.compare(one, two) < 0);
+    }
 
-
+    @Test
+    void transitiveSlopeOrder() {
+        Point p = new Point(41, 434);
+        Point q = new Point(298, 190);
+        Point r = new Point(259, 44);
+        Point s = new Point(79, 349);
+        assertEquals(1,  p.slopeOrder().compare(q, r));
+        assertEquals(1,  p.slopeOrder().compare(r, s));
+        assertEquals(1,  p.slopeOrder().compare(q, s));
     }
 }
