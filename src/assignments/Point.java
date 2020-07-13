@@ -90,15 +90,22 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        Point callingPoint = this;
-        return new Comparator<Point>() {
-            @Override
-            public int compare(Point o1, Point o2) {
-                return (int) (callingPoint.slopeTo(o1) - callingPoint.slopeTo(o2));
-            }
-        };
+        return new PointComparator(this);
     }
 
+    private static class PointComparator implements Comparator<Point> {
+        private final Point callingPoint;
+
+        private PointComparator(Point callingPoint) {
+            this.callingPoint = callingPoint;
+        }
+
+
+        @Override
+        public int compare(Point o1, Point o2) {
+            return (int) (callingPoint.slopeTo(o1) - callingPoint.slopeTo(o2));
+        }
+    }
 
     /**
      * Returns a string representation of this point.
