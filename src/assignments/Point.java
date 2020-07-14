@@ -1,6 +1,6 @@
 /******************************************************************************
- *  Compilation:  javac week3.Point.java
- *  Execution:    java week3.Point
+ *  Compilation:  javac Point.java
+ *  Execution:    java Point
  *  Dependencies: none
  *
  *  An immutable data type for points in the plane.
@@ -116,8 +116,7 @@ public class Point implements Comparable<Point> {
 
         @Override
         public int compare(Point o1, Point o2) {
-            Double slopeO1 = callingPoint.slopeTo(o1);
-            return slopeO1.compareTo(callingPoint.slopeTo(o2));
+            return Double.compare(callingPoint.slopeTo(o1), callingPoint.slopeTo(o2));
         }
     }
 
@@ -134,7 +133,7 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Unit tests the week3.Point data type.
+     * Unit tests the Point data type.
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */

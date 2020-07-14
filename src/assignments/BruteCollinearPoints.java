@@ -1,8 +1,11 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BruteCollinearPoints {
-    private final LineSegment[] segments;
+    List<Double> slopes;
+    List<Point> startPoints;
+    List<Point> endPoints;
 
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
@@ -24,17 +27,13 @@ public class BruteCollinearPoints {
                 }
             }
         }
-        List<LineSegment> segments = segmentsFromPoints(points);
-        this.segments = new LineSegment[segments.size()];
-        for (int i = 0; i < segments.size(); i++) {
-            this.segments[i] = segments.get(0);
-        }
+        this.slopes = new ArrayList<>();
+        this.startPoints = new ArrayList<>();
+        this.endPoints = new ArrayList<>();
+        segmentsFromPoints(points);
     }
 
-    private List<LineSegment> segmentsFromPoints(Point[] points) {
-        Double[] slopes = new Double[points.length];
-        LineSegment[] ls = new LineSegment[points.length];
-        int lineSegmentIndex = 0;
+    private void segmentsFromPoints(Point[] points) {
         for (int i = 0; i < points.length - 3; i++) {
             Point p = points[i];
             for (int j = i + 1; j < points.length - 2; j++) {
@@ -49,46 +48,47 @@ public class BruteCollinearPoints {
                         Point s = points[l];
                         if (slopePQ == p.slopeTo(s)) {
                             Integer existingLineSegmentIndex = null;
-                            for (int slopeIndex = 0; slopeIndex < slopes.length; slopeIndex++) {
-                                if (slopes[slopeIndex] != null && slopes[slopeIndex] == slopePQ) {
+                            for (int slopeIndex = 0; slopeIndex < slopes.size(); slopeIndex++) {
+                                if (slopes.get(slopeIndex) == slopePQ) {
                                     existingLineSegmentIndex = slopeIndex;
                                     break;
                                 }
                             }
                             if (existingLineSegmentIndex != null) {
-                                ls[existingLineSegmentIndex] = new LineSegment(p, s);
+                                // Existing segment
+                                Point startPoint = startPoints.get(existingLineSegmentIndex);
+                                Point endPoint = endPoints.get(existingLineSegmentIndex);
+                                Point[] thisSlopePoints = {startPoint, p, q, r, s, endPoint};
+                                Arrays.sort(thisSlopePoints);
+                                startPoints.set(existingLineSegmentIndex, thisSlopePoints[0]);
+                                endPoints.set(existingLineSegmentIndex, thisSlopePoints[5]);
                             } else {
-                                slopes[lineSegmentIndex] = slopePQ;
-                                ls[lineSegmentIndex++] = new LineSegment(p, s);
+                                // New Segment
+                                slopes.add(slopePQ);
+                                Point[] thisSlopePoints = {p, q, r, s};
+                                Arrays.sort(thisSlopePoints);
+                                startPoints.add(thisSlopePoints[0]);
+                                endPoints.add(thisSlopePoints[3]);
                             }
 
                         }
-                        // System.out.println(
-                        //         String.format("i: %s; j: %s, k: %s, l: %s", i, j, k, l)
-                        // );
-                        // if (isOnTheSameLineSegment(points[i], points[j], points[k], points[l])) {
-                        //     lineSegments.add(
-                        //             new LineSegment(points[i], points[l])
-                        //     );
-                        // }
                     }
                 }
             }
         }
-        List<LineSegment> lineSegments = new ArrayList<>();
-        for (LineSegment l : ls) {
-            if (l != null) {
-                lineSegments.add(l);
-            }
-        }
-        return lineSegments;
-}
+    }
+
 
     public int numberOfSegments() {
-        return segments.length;
+        return startPoints.size();
     }
 
     public LineSegment[] segments() {
+        LineSegment[] segments = new LineSegment[startPoints.size()];
+        for (int i = 0; i < startPoints.size(); i++) {
+            segments[i] = new LineSegment(startPoints.get(i), endPoints.get(i));
+        }
         return segments;
     }
+
 }
