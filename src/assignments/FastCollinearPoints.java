@@ -2,12 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FastCollinearPoints {
     private final List<Point> startPoints;
     private final List<Point> endPoints;
-    private List<LineSegment> lineSegments;
+    private final List<LineSegment> lineSegments;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) {
@@ -44,7 +43,7 @@ public class FastCollinearPoints {
                 double slopePQ = p.slopeTo(q);
                 Arrays.sort(points, p.slopeOrder());
                 List<Point> pointsWithSameSlope = new ArrayList<>();
-                for (Point point: points) {
+                for (Point point : points) {
                     if (pointsWithSameSlope.size() >= 4) {
                         break;
                     }
@@ -58,13 +57,14 @@ public class FastCollinearPoints {
 
                     Point startPoint = pointsWithSameSlope.get(0);
                     Point endPoint = pointsWithSameSlope.get(pointsWithSameSlope.size() - 1);
-                    int existingStartIndex = startPoints.indexOf(startPoint);
-                    if (existingStartIndex >= 0) {
-                        int existingEndIndex = endPoints.indexOf(endPoint);
-                        if (existingEndIndex >= 0 && existingStartIndex == existingEndIndex) {
-                            continue;
-                        }
-                    }
+                    // int existingStartIndex = startPoints.indexOf(startPoint);
+                    // if (existingStartIndex >= 0) {
+                    //     int existingEndIndex = endPoints.indexOf(endPoint);
+                    //     // if (existingEndIndex >= 0 && existingStartIndex == existingEndIndex) {
+                    //     if (existingEndIndex >= 0) {
+                    //         continue;
+                    //     }
+                    // }
                     startPoints.add(startPoint);
                     endPoints.add(endPoint);
                 }
