@@ -43,20 +43,30 @@ public class FastCollinearPoints {
                 Point q = originalPoints[j];
                 double slopePQ = p.slopeTo(q);
                 Arrays.sort(points, p.slopeOrder());
-                List<Point> pointsWithSameSlope = Arrays
-                        .stream(points)
-                        .filter(point -> p.slopeTo(point) == slopePQ)
-                        .collect(Collectors.toList());
+                List<Point> pointsWithSameSlope = new ArrayList<>();
+                for (Point point: points) {
+                    if (pointsWithSameSlope.size() >= 4) {
+                        break;
+                    }
+                    if (p.slopeTo(point) == slopePQ) {
+                        pointsWithSameSlope.add(point);
+                    }
+                }
                 if (pointsWithSameSlope.size() >= 3) {
                     pointsWithSameSlope.add(p);
                     Collections.sort(pointsWithSameSlope);
 
                     Point startPoint = pointsWithSameSlope.get(0);
                     Point endPoint = pointsWithSameSlope.get(pointsWithSameSlope.size() - 1);
-                    if (!(startPoints.contains(startPoint) && endPoints.contains(endPoint))) {
-                        startPoints.add(startPoint);
-                        endPoints.add(endPoint);
+                    int existingStartIndex = startPoints.indexOf(startPoint);
+                    if (existingStartIndex >= 0) {
+                        int existingEndIndex = endPoints.indexOf(endPoint);
+                        if (existingEndIndex >= 0 && existingStartIndex == existingEndIndex) {
+                            continue;
+                        }
                     }
+                    startPoints.add(startPoint);
+                    endPoints.add(endPoint);
                 }
             }
         }
