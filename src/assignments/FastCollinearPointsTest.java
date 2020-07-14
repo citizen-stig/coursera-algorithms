@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FastCollinearPointsTest {
@@ -85,6 +86,63 @@ public class FastCollinearPointsTest {
 
         FastCollinearPoints impl = new FastCollinearPoints(points);
         assertEquals(5, impl.numberOfSegments());
+    }
+
+
+    @Test
+    void test4By4Grid() {
+        Point[] points = {
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 2),
+                new Point(1, 0),
+                new Point(1, 1),
+                new Point(1, 2),
+                new Point(2, 0),
+                new Point(2, 1),
+                new Point(2, 2),
+        };
+    }
+
+    @Test
+    void immutableDataCheck() {
+        Point[] points = {
+                new Point(10000, 0),
+                new Point(0, 10000),
+                new Point(3000, 7000),
+                new Point(7000, 3000),
+                new Point(20000, 21000),
+                new Point(3000, 4000),
+                new Point(14000, 15000),
+                new Point(6000, 7000)
+        };
+
+        FastCollinearPoints impl = new FastCollinearPoints(points);
+        assertEquals(2, impl.numberOfSegments());
+
+        LineSegment[] segmentsOne = impl.segments();
+        LineSegment[] segmentsOneOrigin = segmentsOne.clone();
+        assertEquals(2, segmentsOne.length);
+
+        LineSegment expectedSegmentOne = new LineSegment(
+                new Point(10000, 0),
+                new Point(0, 10000)
+        );
+        assertEquals(expectedSegmentOne.toString(), segmentsOne[0].toString());
+        LineSegment expectedSegmentTwo = new LineSegment(
+                new Point(3000, 4000),
+                new Point(20000, 21000)
+        );
+        assertEquals(expectedSegmentTwo.toString(), segmentsOne[1].toString());
+
+        points[1] = new Point(5000, 5000);
+        segmentsOne[0] = new LineSegment(new Point(1, 0), new Point(0, 1));
+        LineSegment[] segmentsTwo = impl.segments();
+
+        assertEquals(2, segmentsTwo.length);
+        assertEquals(expectedSegmentOne.toString(), segmentsTwo[0].toString());
+        assertEquals(expectedSegmentTwo.toString(), segmentsTwo[1].toString());
+        assertArrayEquals(segmentsOneOrigin, segmentsTwo);
     }
 
 }

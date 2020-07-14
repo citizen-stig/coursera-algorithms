@@ -5,6 +5,7 @@ import java.util.List;
 public class BruteCollinearPoints {
     private final List<Point> startPoints;
     private final List<Point> endPoints;
+    private final List<LineSegment> lineSegments;
 
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
@@ -28,10 +29,10 @@ public class BruteCollinearPoints {
         }
         this.startPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
-        segmentsFromPoints(points);
+        this.lineSegments = segmentsFromPoints(points);
     }
 
-    private void segmentsFromPoints(Point[] points) {
+    private List<LineSegment> segmentsFromPoints(Point[] points) {
         for (int i = 0; i < points.length - 3; i++) {
             Point p = points[i];
             for (int j = i + 1; j < points.length - 2; j++) {
@@ -77,6 +78,11 @@ public class BruteCollinearPoints {
                 }
             }
         }
+        List<LineSegment> segments = new ArrayList<>();
+        for (int i = 0; i < startPoints.size(); i++) {
+            segments.add(new LineSegment(startPoints.get(i), endPoints.get(i)));
+        }
+        return segments;
     }
 
 
@@ -87,7 +93,7 @@ public class BruteCollinearPoints {
     public LineSegment[] segments() {
         LineSegment[] segments = new LineSegment[startPoints.size()];
         for (int i = 0; i < startPoints.size(); i++) {
-            segments[i] = new LineSegment(startPoints.get(i), endPoints.get(i));
+            segments[i] = lineSegments.get(i);
         }
         return segments;
     }

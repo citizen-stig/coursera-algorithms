@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class FastCollinearPoints {
     private final List<Point> startPoints;
     private final List<Point> endPoints;
+    private List<LineSegment> lineSegments;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) {
@@ -31,10 +32,10 @@ public class FastCollinearPoints {
 
         this.startPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
-        segmentsFromPoints(points.clone());
+        this.lineSegments = segmentsFromPoints(points.clone());
     }
 
-    private void segmentsFromPoints(Point[] points) {
+    private List<LineSegment> segmentsFromPoints(Point[] points) {
         Point[] originalPoints = points.clone();
         for (int i = 0; i < points.length - 3; i++) {
             Point p = originalPoints[i];
@@ -59,6 +60,11 @@ public class FastCollinearPoints {
                 }
             }
         }
+        List<LineSegment> segments = new ArrayList<>();
+        for (int i = 0; i < startPoints.size(); i++) {
+            segments.add(new LineSegment(startPoints.get(i), endPoints.get(i)));
+        }
+        return segments;
     }
 
     public int numberOfSegments() {
@@ -68,7 +74,7 @@ public class FastCollinearPoints {
     public LineSegment[] segments() {
         LineSegment[] segments = new LineSegment[startPoints.size()];
         for (int i = 0; i < startPoints.size(); i++) {
-            segments[i] = new LineSegment(startPoints.get(i), endPoints.get(i));
+            segments[i] = lineSegments.get(i);
         }
         return segments;
     }

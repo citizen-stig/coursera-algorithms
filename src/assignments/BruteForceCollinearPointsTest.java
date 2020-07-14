@@ -59,10 +59,18 @@ public class BruteForceCollinearPointsTest {
         BruteCollinearPoints impl = new BruteCollinearPoints(points);
         assertEquals(2, impl.numberOfSegments());
 
-        LineSegment expectedSegmentOne = new LineSegment(points[0], points[1]);
-        assertEquals(expectedSegmentOne.toString(), impl.segments()[0].toString());
-        LineSegment expectedSegmentTwo = new LineSegment(points[5], points[4]);
-        assertEquals(expectedSegmentTwo.toString(), impl.segments()[1].toString());
+        LineSegment[] segmentsOne = impl.segments();
+        LineSegment expectedSegmentOne = new LineSegment(
+                new Point(10000, 0),
+                new Point(0, 10000)
+        );
+        assertEquals(expectedSegmentOne.toString(), segmentsOne[0].toString());
+        LineSegment expectedSegmentTwo = new LineSegment(
+                new Point(3000, 4000),
+                new Point(20000, 21000)
+        );
+        assertEquals(expectedSegmentTwo.toString(), segmentsOne[1].toString());
+
     }
 
     @Test
@@ -92,5 +100,61 @@ public class BruteForceCollinearPointsTest {
 
         BruteCollinearPoints impl = new BruteCollinearPoints(points);
         assertEquals(5, impl.numberOfSegments());
+    }
+
+    /**
+     * check that data type is immutable by testing whether each method
+     *          returns the same value, regardless of any intervening operations
+     *   * input8.txt
+     *     - failed after 6 operations involving BruteCollinearPoints
+     *     - first and last call to segments() returned different arrays
+     *
+     *     - sequence of operations was:
+     *           BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+     *           collinear.segments()
+     *           mutate points[] array that was passed to constructor
+     *           mutate array returned by last call to segments()
+     *           mutate array returned by last call to segments()
+     *           collinear.segments()
+     */
+    @Test
+    void immutableDataCheck() {
+        Point[] points = {
+                new Point(10000, 0),
+                new Point(0, 10000),
+                new Point(3000, 7000),
+                new Point(7000, 3000),
+                new Point(20000, 21000),
+                new Point(3000, 4000),
+                new Point(14000, 15000),
+                new Point(6000, 7000)
+        };
+
+        BruteCollinearPoints impl = new BruteCollinearPoints(points);
+        assertEquals(2, impl.numberOfSegments());
+
+        LineSegment[] segmentsOne = impl.segments();
+        LineSegment[] segmentsOneOrigin = segmentsOne.clone();
+        assertEquals(2, segmentsOne.length);
+
+        LineSegment expectedSegmentOne = new LineSegment(
+                new Point(10000, 0),
+                new Point(0, 10000)
+        );
+        assertEquals(expectedSegmentOne.toString(), segmentsOne[0].toString());
+        LineSegment expectedSegmentTwo = new LineSegment(
+                new Point(3000, 4000),
+                new Point(20000, 21000)
+        );
+        assertEquals(expectedSegmentTwo.toString(), segmentsOne[1].toString());
+
+        points[1] = new Point(5000, 5000);
+        segmentsOne[0] = new LineSegment(new Point(1, 0), new Point(0, 1));
+        LineSegment[] segmentsTwo = impl.segments();
+
+        assertEquals(2, segmentsTwo.length);
+        assertEquals(expectedSegmentOne.toString(), segmentsTwo[0].toString());
+        assertEquals(expectedSegmentTwo.toString(), segmentsTwo[1].toString());
+        assertArrayEquals(segmentsOneOrigin, segmentsTwo);
     }
 }
