@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BruteCollinearPoints {
-    private final List<Double> slopes;
     private final List<Point> startPoints;
     private final List<Point> endPoints;
 
@@ -27,7 +26,6 @@ public class BruteCollinearPoints {
                 }
             }
         }
-        this.slopes = new ArrayList<>();
         this.startPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
         segmentsFromPoints(points);
@@ -47,13 +45,17 @@ public class BruteCollinearPoints {
                     for (int n = k + 1; n < points.length; n++) {
                         Point s = points[n];
                         if (slopePQ == p.slopeTo(s)) {
-                            int existingLineSegmentIndex = -1 ;
-                            for (int slopeIndex = 0; slopeIndex < slopes.size(); slopeIndex++) {
-                                if (slopes.get(slopeIndex) == slopePQ) {
-                                    existingLineSegmentIndex = slopeIndex;
+                            int existingLineSegmentIndex = -1;
+                            for (int previousSlopeIndex = 0; previousSlopeIndex < startPoints.size(); previousSlopeIndex++) {
+                                Point startPoint = startPoints.get(previousSlopeIndex);
+                                Point endPoint = endPoints.get(previousSlopeIndex);
+                                double previousSlope = startPoint.slopeTo(endPoint);
+                                if (previousSlope == slopePQ && startPoint.slopeTo(p) == slopePQ) {
+                                    existingLineSegmentIndex = previousSlopeIndex;
                                     break;
                                 }
                             }
+
                             if (existingLineSegmentIndex >= 0) {
                                 // Existing segment
                                 Point startPoint = startPoints.get(existingLineSegmentIndex);
@@ -64,7 +66,6 @@ public class BruteCollinearPoints {
                                 endPoints.set(existingLineSegmentIndex, thisSlopePoints[5]);
                             } else {
                                 // New Segment
-                                slopes.add(slopePQ);
                                 Point[] thisSlopePoints = {p, q, r, s};
                                 Arrays.sort(thisSlopePoints);
                                 startPoints.add(thisSlopePoints[0]);

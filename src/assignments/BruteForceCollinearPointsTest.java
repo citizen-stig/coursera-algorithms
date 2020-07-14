@@ -64,4 +64,33 @@ public class BruteForceCollinearPointsTest {
         LineSegment expectedSegmentTwo = new LineSegment(points[5], points[4]);
         assertEquals(expectedSegmentTwo.toString(), impl.segments()[1].toString());
     }
+
+    @Test
+    void fiveRandomLineSegments() {
+        Point[] points = {
+                new Point(10780, 11709),
+                new Point(8182, 14492),
+                new Point(12124, 11709),
+                new Point(8788, 3697),
+                new Point(8182, 15150),
+                new Point(11488, 6523),
+                new Point(8233, 5327),
+                new Point(9935, 7443),
+                new Point(6753, 1070),
+                new Point(7840, 11709),
+                new Point(13043, 11307),
+                new Point(10630, 6523),
+                new Point(13360, 6523),
+                new Point(9772, 11709),
+                new Point(8182, 15197),
+                new Point(10548, 5969),
+                new Point(9778, 4975),
+                new Point(8182, 11343),
+                new Point(6605, 3303),
+                new Point(13438, 6523)
+        };
+
+        BruteCollinearPoints impl = new BruteCollinearPoints(points);
+        assertEquals(5, impl.numberOfSegments());
+    }
 }
