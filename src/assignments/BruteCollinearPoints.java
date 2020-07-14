@@ -3,9 +3,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BruteCollinearPoints {
-    List<Double> slopes;
-    List<Point> startPoints;
-    List<Point> endPoints;
+    private final List<Double> slopes;
+    private final List<Point> startPoints;
+    private final List<Point> endPoints;
 
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
@@ -44,17 +44,17 @@ public class BruteCollinearPoints {
                     if (p.slopeTo(r) != slopePQ) {
                         continue;
                     }
-                    for (int l = k + 1; l < points.length; l++) {
-                        Point s = points[l];
+                    for (int n = k + 1; n < points.length; n++) {
+                        Point s = points[n];
                         if (slopePQ == p.slopeTo(s)) {
-                            Integer existingLineSegmentIndex = null;
+                            int existingLineSegmentIndex = -1 ;
                             for (int slopeIndex = 0; slopeIndex < slopes.size(); slopeIndex++) {
                                 if (slopes.get(slopeIndex) == slopePQ) {
                                     existingLineSegmentIndex = slopeIndex;
                                     break;
                                 }
                             }
-                            if (existingLineSegmentIndex != null) {
+                            if (existingLineSegmentIndex >= 0) {
                                 // Existing segment
                                 Point startPoint = startPoints.get(existingLineSegmentIndex);
                                 Point endPoint = endPoints.get(existingLineSegmentIndex);
