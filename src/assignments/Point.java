@@ -7,6 +7,7 @@
  *  For use on Coursera, Algorithms Part I programming assignment.
  *
  ******************************************************************************/
+
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Comparator;
@@ -57,11 +58,20 @@ public class Point implements Comparable<Point> {
      *
      * @param that the other point
      * @return the slope between this point and the specified point
+     * <p>
+     * Treat the slope of a horizontal line segment as positive zero;
+     * treat the slope of a vertical line segment as positive infinity;
+     * treat the slope of a degenerate line segment (between a point and itself) as negative infinity.
      */
     public double slopeTo(Point that) {
-        if (this.y == that.y && this.x == that.x) {
+        if (this.y == that.y && this.x == that.x) {    // Same dot
             return Double.NEGATIVE_INFINITY;
+        } else if (this.y == that.y) {                 // Horizontal line
+            return +0.0;
+        } else if (this.x == that.x) {                 // Vertical Line
+            return Double.POSITIVE_INFINITY;
         }
+
         return (double) (this.y - that.y) / (double) (this.x - that.x);
     }
 

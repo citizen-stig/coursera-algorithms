@@ -41,36 +41,107 @@ public class PointTest {
         assertEquals(1.0, rightUp.slopeTo(zero));
     }
 
+
+    /**
+     * positive infinite slope, where p and q have coordinates in [0, 32768)
+     *      Failed on trial 1 of 100000
+     *      p             = (9842, 18181)
+     *      q             = (9842, 2528)
+     *      p.slopeTo(q)  = -Infinity
+     */
     @Test
     void slopeToVerticalLine() {
-        Point zero = new Point(0, 0);
-        Point above = new Point(0, 10);
+        Point p = new Point(9842, 18181);
+        Point q = new Point(9842, 2528);
 
-        assertEquals(Double.NEGATIVE_INFINITY, zero.slopeTo(above));
-        assertEquals(Double.POSITIVE_INFINITY, above.slopeTo(zero));
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
+        assertEquals(Double.POSITIVE_INFINITY, q.slopeTo(p));
     }
 
-    @Test
-    void anotherVerticalLine() {
-        Point p = new Point(444, 431);
-        Point q = new Point(444, 364);
 
+    // @Test
+    // void anotherVerticalLine() {
+    //     Point p = new Point(122, 282);
+    //     Point q = new Point(122, 113);
+    //
+    //     assertEquals(Double.NEGATIVE_INFINITY, p.slopeTo(q));
+    //     assertEquals(Double.POSITIVE_INFINITY, q.slopeTo(p));
+    // }
+
+    /**
+     * positive infinite slope, where p and q have coordinates in [0, 500)
+     *      Failed on trial 1 of 100000
+     *      p             = (368, 151)
+     *      q             = (368, 105)
+     *      p.slopeTo(q)  = -Infinity
+     */
+    @Test
+    void yetAnotherVerticalLine() {
+        Point p = new Point(368, 151);
+        Point q = new Point(368, 105);
+
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
+        assertEquals(Double.POSITIVE_INFINITY, q.slopeTo(p));
+    }
+
+
+    /**
+     * * positive infinite slope, where p and q have coordinates in [0, 500)
+     *      Failed on trial 1 of 100000
+     *      p             = (368, 151)
+     *      q             = (368, 105)
+     *      p.slopeTo(q)  = -Infinity
+     */
+    @Test
+    void positiveInfiniteSlope() {
+        Point p = new Point(368, 151);
+        Point q = new Point(368, 105);
         assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
     }
 
+    /**
+     * symmetric for random points p and q with coordinates in [0, 500)
+     *      Failed on trial 793 of 100000
+     *      p               = (159, 391)
+     *      q               = (159, 218)
+     *      p.slopeTo(q)  = Infinity
+     *      q.slopeTo(p)  = -Infinity
+     */
     @Test
-    void slopeToHorizontalLine() {
-        Point zero = new Point(0, 0);
-        Point onTheRight = new Point(10, 0);
+    void symmetricForRandomPoints() {
+        Point p = new Point(159, 391);
+        Point q = new Point(159, 218);
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
+        assertEquals(Double.POSITIVE_INFINITY, q.slopeTo(p));
+    }
 
-        assertEquals(-0.0, zero.slopeTo(onTheRight));
+    /**
+     *  positive zero     slope, where p and q have coordinates in [0, 500)
+     *      Failed on trial 1 of 100000
+     *      p             = (457, 23)
+     *      q             = (235, 23)
+     *      p.slopeTo(q)  = -0.0
+     */
+    @Test
+    void positiveZeroSlopeSmallCoordinates() {
+        Point zero = new Point (457, 23);
+        Point onTheRight = new Point(235, 23);
+
+        assertEquals(+0.0, zero.slopeTo(onTheRight));
         assertEquals(+0.0, onTheRight.slopeTo(zero));
     }
 
+    /**
+     * positive zero     slope, where p and q have coordinates in [0, 32768)
+     *      Failed on trial 3 of 100000
+     *      p             = (31978, 10339)
+     *      q             = (28953, 10339)
+     *      p.slopeTo(q)  = -0.0
+     */
     @Test
-    void anotherHorizontalLine() {
-        Point p = new Point(435, 330);
-        Point q =  new Point(79, 330);
+    void positiveZeroSlope() {
+        Point p = new Point(31978, 10339);
+        Point q = new Point(28953, 10339);
         assertEquals(+0.0, p.slopeTo(q));
     }
 
@@ -109,8 +180,52 @@ public class PointTest {
         Point q = new Point(298, 190);
         Point r = new Point(259, 44);
         Point s = new Point(79, 349);
-        assertEquals(1,  p.slopeOrder().compare(q, r));
-        assertEquals(1,  p.slopeOrder().compare(r, s));
-        assertEquals(1,  p.slopeOrder().compare(q, s));
+        assertEquals(1, p.slopeOrder().compare(q, r));
+        assertEquals(1, p.slopeOrder().compare(r, s));
+        assertEquals(1, p.slopeOrder().compare(q, s));
+    }
+
+    /**
+     * sign of compare(), where p, q, and r have coordinates in [0, 500)
+     *      Failed on trial 1608 of 100000
+     *      p                         = (88, 378)
+     *      q                         = (88, 15)
+     *      r                         = (28, 4)
+     *      student   p.compare(q, r) = -1
+     *      reference p.compare(q, r) = 1
+     *      reference p.slopeTo(q)    = Infinity
+     *      reference p.slopeTo(r)    = 6.233333333333333
+     */
+    @Test
+    void signOfCompare() {
+        Point p = new Point(88, 378);
+        Point q = new Point(88, 15);
+        Point r = new Point(28, 4);
+
+        assertEquals(1, p.slopeOrder().compare(q, r));
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(q));
+        assertEquals(6.233333333333333, p.slopeTo(r));
+    }
+
+    /**
+     * * sign of compare(), where p, q, and r have coordinates in [0, 32768)
+     *      Failed on trial 31506 of 100000
+     *      p                         = (18857, 18587)
+     *      q                         = (24713, 12218)
+     *      r                         = (18857, 9858)
+     *      student   p.compare(q, r) = 1
+     *      reference p.compare(q, r) = -1
+     *      reference p.slopeTo(q)    = -1.0876024590163935
+     *      reference p.slopeTo(r)    = Infinity
+     */
+    @Test
+    void signOfCompareBigger() {
+        Point p = new Point(18857, 18587);
+        Point q = new Point(24713, 12218);
+        Point r = new Point(18857, 9858);
+
+        assertEquals(-1, p.slopeOrder().compare(q, r));
+        assertEquals(-1.0876024590163935, p.slopeTo(q));
+        assertEquals(Double.POSITIVE_INFINITY, p.slopeTo(r));
     }
 }
