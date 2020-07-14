@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FastCollinearPoints {
     private final List<Point> startPoints;
     private final List<Point> endPoints;
-    private final List<Double> slopes;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) {
@@ -31,7 +31,6 @@ public class FastCollinearPoints {
 
         this.startPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
-        this.slopes = new ArrayList<>();
         segmentsFromPoints(points.clone());
     }
 
@@ -42,20 +41,22 @@ public class FastCollinearPoints {
             for (int j = i + 1; j < points.length - 2; j++) {
                 Point q = originalPoints[j];
                 double slopePQ = p.slopeTo(q);
-                if (slopes.contains(slopePQ)) {
-                    continue;
-                }
                 Arrays.sort(points, p.slopeOrder());
                 List<Point> pointsWithSameSlope = Arrays
                         .stream(points)
                         .filter(point -> p.slopeTo(point) == slopePQ)
-                        .sorted()
                         .collect(Collectors.toList());
                 if (pointsWithSameSlope.size() >= 3) {
-                    startPoints.add(pointsWithSameSlope.get(0));
-                    endPoints.add(pointsWithSameSlope.get(pointsWithSameSlope.size() - 1));
+                    pointsWithSameSlope.add(p);
+                    Collections.sort(pointsWithSameSlope);
+
+                    Point startPoint = pointsWithSameSlope.get(0);
+                    Point endPoint = pointsWithSameSlope.get(pointsWithSameSlope.size() - 1);
+                    if (!(startPoints.contains(startPoint) && endPoints.contains(endPoint))) {
+                        startPoints.add(startPoint);
+                        endPoints.add(endPoint);
+                    }
                 }
-                slopes.add(slopePQ);
             }
         }
     }
