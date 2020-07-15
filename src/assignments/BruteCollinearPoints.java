@@ -21,8 +21,12 @@ public class BruteCollinearPoints {
                 if (i == j) {
                     continue;
                 }
+                Point q = points[j];
+                if (q == null) {
+                    throw new IllegalArgumentException();
+                }
                 // No same points
-                if (p.equals(points[j])) {
+                if (p.compareTo(q) == 0) {
                     throw new IllegalArgumentException();
                 }
             }

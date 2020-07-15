@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +22,12 @@ public class FastCollinearPoints {
                 if (i == j) {
                     continue;
                 }
+                Point q = points[j];
+                if (q == null) {
+                    throw new IllegalArgumentException();
+                }
                 // No same points
-                if (p.compareTo(points[j]) == 0) {
+                if (p.compareTo(q) == 0) {
                     throw new IllegalArgumentException();
                 }
             }
@@ -39,20 +42,41 @@ public class FastCollinearPoints {
         Point[] originalPoints = points.clone();
         for (int i = 0; i < points.length - 3; i++) {
             Point p = originalPoints[i];
-            for (int j = i + 1; j < points.length - 2; j++) {
+            for (int j = i + 1; j < points.length - 2; j++) {    // N^2
                 Point q = originalPoints[j];
                 double slopePQ = p.slopeTo(q);
-                Arrays.sort(points, p.slopeOrder());
-                List<Point> pointsWithSameSlope = Arrays
-                        .stream(points)
-                        .filter(point -> p.slopeTo(point) == slopePQ)
-                        .collect(Collectors.toList());
+                Arrays.sort(points, p.slopeOrder());             // NlogN
+
+                // List<Point> pointsWithSameSlope = Arrays
+                //         .stream(points)
+                //         .filter(point -> p.slopeTo(point) == slopePQ)
+                //         .collect(Collectors.toList());          // N
+                List<Point> pointsWithSameSlope = new ArrayList<>();
+                boolean capturing = false;
+                for (Point point: points) {
+                    if (p.slopeTo(point) == slopePQ) {
+                        capturing = true;
+                        pointsWithSameSlope.add(point);
+                    } else {
+                        if (capturing) {
+                            break;
+                        }
+                    }
+                }
+
                 if (pointsWithSameSlope.size() >= 3) {
                     pointsWithSameSlope.add(p);
-                    Collections.sort(pointsWithSameSlope);
 
                     Point startPoint = pointsWithSameSlope.get(0);
                     Point endPoint = pointsWithSameSlope.get(pointsWithSameSlope.size() - 1);
+                    for (Point point: pointsWithSameSlope) {
+                        if (point.compareTo(startPoint) < 0) {
+                            startPoint = point;
+                        }
+                        if (point.compareTo(endPoint) > 0) {
+                            endPoint = point;
+                        }
+                    }
 
                     // Check existing lines:
                     if (isLineSegmentAlreadyExists(startPoint, endPoint)) {

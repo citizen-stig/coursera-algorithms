@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -180,5 +181,16 @@ public class FastCollinearPointsTest {
                 new Point(1000, 1000),
                 new Point(9000, 9000)
         ).toString(), segments[0].toString());
+    }
+
+    @Test
+    void nullPoint() {
+        Point[] points = {
+                new Point(1000, 1000),
+                null
+        };
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new FastCollinearPoints(points);
+        });
     }
 }
