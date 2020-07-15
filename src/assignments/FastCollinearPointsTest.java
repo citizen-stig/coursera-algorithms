@@ -95,15 +95,6 @@ public class FastCollinearPointsTest {
                 new Point(0, 0),
                 new Point(0, 1),
                 new Point(0, 2),
-                new Point(1, 0),
-                new Point(1, 1),
-                new Point(1, 2),
-                new Point(2, 0),
-                new Point(2, 1),
-                new Point(2, 2),
-                new Point(0, 0),
-                new Point(0, 1),
-                new Point(0, 2),
                 new Point(0, 3),
                 new Point(1, 0),
                 new Point(1, 1),
@@ -122,6 +113,7 @@ public class FastCollinearPointsTest {
         FastCollinearPoints impl = new FastCollinearPoints(points);
         assertEquals(10, impl.numberOfSegments());
         LineSegment[] segments = impl.segments();
+
         assertEquals(10, segments.length);
     }
 
@@ -184,5 +176,9 @@ public class FastCollinearPointsTest {
         assertEquals(1, impl.numberOfSegments());
         LineSegment[] segments = impl.segments();
         assertEquals(1, segments.length);
+        assertEquals(new LineSegment(
+                new Point(1000, 1000),
+                new Point(9000, 9000)
+        ).toString(), segments[0].toString());
     }
 }

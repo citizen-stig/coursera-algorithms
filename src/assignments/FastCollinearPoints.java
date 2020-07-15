@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FastCollinearPoints {
     private final List<Point> startPoints;
@@ -23,7 +24,7 @@ public class FastCollinearPoints {
                     continue;
                 }
                 // No same points
-                if (p.equals(points[j])) {
+                if (p.compareTo(points[j]) == 0) {
                     throw new IllegalArgumentException();
                 }
             }
@@ -42,29 +43,22 @@ public class FastCollinearPoints {
                 Point q = originalPoints[j];
                 double slopePQ = p.slopeTo(q);
                 Arrays.sort(points, p.slopeOrder());
-                List<Point> pointsWithSameSlope = new ArrayList<>();
-                for (Point point : points) {
-                    if (pointsWithSameSlope.size() >= 4) {
-                        break;
-                    }
-                    if (p.slopeTo(point) == slopePQ) {
-                        pointsWithSameSlope.add(point);
-                    }
-                }
+                List<Point> pointsWithSameSlope = Arrays
+                        .stream(points)
+                        .filter(point -> p.slopeTo(point) == slopePQ)
+                        .collect(Collectors.toList());
                 if (pointsWithSameSlope.size() >= 3) {
                     pointsWithSameSlope.add(p);
                     Collections.sort(pointsWithSameSlope);
 
                     Point startPoint = pointsWithSameSlope.get(0);
                     Point endPoint = pointsWithSameSlope.get(pointsWithSameSlope.size() - 1);
-                    // int existingStartIndex = startPoints.indexOf(startPoint);
-                    // if (existingStartIndex >= 0) {
-                    //     int existingEndIndex = endPoints.indexOf(endPoint);
-                    //     // if (existingEndIndex >= 0 && existingStartIndex == existingEndIndex) {
-                    //     if (existingEndIndex >= 0) {
-                    //         continue;
-                    //     }
-                    // }
+
+                    // Check existing lines:
+                    if (isLineSegmentAlreadyExists(startPoint, endPoint)) {
+                        continue;
+                    }
+
                     startPoints.add(startPoint);
                     endPoints.add(endPoint);
                 }
@@ -87,5 +81,14 @@ public class FastCollinearPoints {
             segments[i] = lineSegments.get(i);
         }
         return segments;
+    }
+
+    private boolean isLineSegmentAlreadyExists(Point startPoint, Point endPoint) {
+        for (int index = 0; index < startPoints.size(); index++) {
+            if (startPoints.get(index).equals(startPoint) && endPoints.get(index).equals(endPoint)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

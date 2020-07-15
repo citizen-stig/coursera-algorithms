@@ -164,15 +164,6 @@ public class BruteForceCollinearPointsTest {
                 new Point(0, 0),
                 new Point(0, 1),
                 new Point(0, 2),
-                new Point(1, 0),
-                new Point(1, 1),
-                new Point(1, 2),
-                new Point(2, 0),
-                new Point(2, 1),
-                new Point(2, 2),
-                new Point(0, 0),
-                new Point(0, 1),
-                new Point(0, 2),
                 new Point(0, 3),
                 new Point(1, 0),
                 new Point(1, 1),
@@ -192,5 +183,25 @@ public class BruteForceCollinearPointsTest {
         assertEquals(10, impl.numberOfSegments());
         LineSegment[] segments = impl.segments();
         assertEquals(10, segments.length);
+    }
+
+    @Test
+    void input9() {
+        Point[] points = {
+                new Point(1000, 1000),
+                new Point(2000, 2000),
+                new Point(3000, 3000),
+                new Point(4000, 4000),
+                new Point(5000, 5000),
+                new Point(6000, 6000),
+                new Point(7000, 7000),
+                new Point(8000, 8000),
+                new Point(9000, 9000)
+        };
+
+        BruteCollinearPoints impl = new BruteCollinearPoints(points);
+        assertEquals(1, impl.numberOfSegments());
+        LineSegment[] segments = impl.segments();
+        assertEquals(1, segments.length);
     }
 }
