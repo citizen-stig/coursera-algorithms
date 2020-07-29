@@ -1,8 +1,8 @@
+import edu.princeton.cs.algs4.StdRandom;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
@@ -29,13 +29,13 @@ public class Board {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         int padding = 2;
-        if ( tiles.length > 3 && tiles.length < 10) {
+        if (tiles.length > 3 && tiles.length < 10) {
             padding = 3;
-        } else if (tiles.length >= 10 ) {
+        } else if (tiles.length >= 10) {
             padding = 4;
         }
         String regularTemplate = "%1$" + padding + "s";
-        String firstColTemplate =  "%1$s";
+        String firstColTemplate = "%1$s";
         for (int[] row : tiles) {
             for (int j = 0; j < tiles.length; j++) {
                 String template;
@@ -108,22 +108,22 @@ public class Board {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Board board = (Board) o;
-        return Arrays.equals(tiles, board.tiles);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Board board = (Board) obj;
+        return Arrays.deepEquals(tiles, board.tiles);
     }
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
         List<Board> boards = new ArrayList<>();
         int n = tiles.length;
-        for (int i = zeroI - 1; i <= zeroI + 1; i++)  {
+        for (int i = zeroI - 1; i <= zeroI + 1; i++) {
             if (i < 0 || i >= n) {
                 continue;
             }
-            for (int j = zeroJ - 1; j <= zeroJ + 1; j++)  {
+            for (int j = zeroJ - 1; j <= zeroJ + 1; j++) {
                 if (j < 0 || j >= n || (i != zeroI && j != zeroJ) || (i == zeroI && j == zeroJ)) {
                     continue;
                 }
@@ -157,5 +157,6 @@ public class Board {
 
     // unit testing (not graded)
     public static void main(String[] args) {
+        // Tests are in separate file
     }
 }
