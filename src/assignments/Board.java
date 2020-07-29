@@ -137,7 +137,7 @@ public class Board {
             fromJ = StdRandom.uniform(dimension());
             toI = StdRandom.uniform(dimension());
             toJ = StdRandom.uniform(dimension());
-        } while (!(fromI != toI || fromJ != toJ));
+        } while ((tiles[fromI][fromJ] == 0) || (tiles[toI][toJ] == 0) || (fromI == toI && fromJ == toJ));
         return swapTiles(fromI, fromJ, toI, toJ);
     }
 
