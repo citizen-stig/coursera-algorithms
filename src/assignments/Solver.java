@@ -21,6 +21,9 @@ public class Solver {
         SearchNode current = queue.delMin();
         while (!current.board.isGoal()) {
             for (SearchNode neighbor : current.neighbors()) {
+                // if (neighbor.previous.board.equals(current.board)) {
+                //     continue;
+                // }
                 queue.insert(neighbor);
             }
             current = queue.delMin();
@@ -69,8 +72,8 @@ public class Solver {
         }
 
         @Override
-        public int compareTo(SearchNode o) {
-            return Integer.compare(this.board.manhattan(), o.board.manhattan());
+        public int compareTo(SearchNode other) {
+            return Integer.compare(this.board.manhattan(), other.board.manhattan());
         }
     }
 

@@ -28,14 +28,9 @@ public class Board {
     // string representation of this board
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        int padding = 2;
-        if (tiles.length > 3 && tiles.length < 10) {
-            padding = 3;
-        } else if (tiles.length >= 10) {
-            padding = 4;
-        }
-        String regularTemplate = "%1$" + padding + "s";
-        String firstColTemplate = "%1$s";
+        String firstColTemplate = "%1$2s";
+        String regularTemplate = "%1$3s";
+        builder.append(String.format("%s\n", dimension()));
         for (int[] row : tiles) {
             for (int j = 0; j < tiles.length; j++) {
                 String template;
@@ -136,12 +131,14 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        return swapTiles(
-                StdRandom.uniform(dimension()),
-                StdRandom.uniform(dimension()),
-                StdRandom.uniform(dimension()),
-                StdRandom.uniform(dimension())
-        );
+        int fromI, fromJ, toI, toJ;
+        do {
+            fromI = StdRandom.uniform(dimension());
+            fromJ = StdRandom.uniform(dimension());
+            toI = StdRandom.uniform(dimension());
+            toJ = StdRandom.uniform(dimension());
+        } while (!(fromI != toI || fromJ != toJ));
+        return swapTiles(fromI, fromJ, toI, toJ);
     }
 
     private Board swapTiles(int fromI, int fromJ, int toI, int toJ) {
