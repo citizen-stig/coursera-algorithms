@@ -6,39 +6,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Solver {
-    private final MinPQ<SearchNode> queue;
     private final List<Board> boardStates;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        this.queue = new MinPQ<>();
-        this.queue.insert(new SearchNode(initial));
-        this.boardStates = new ArrayList<>();
-        solve();
+        this.boardStates = getSolution(initial);
     }
 
-    private void solve() {
+    private List<Board> getSolution(Board initial) {
+        // Preparation
+        List<Board> solutionBoards = new ArrayList<>();
+        solutionBoards.add(initial);
+        MinPQ<SearchNode> queue = new MinPQ<>();
+        queue.insert(new SearchNode(initial));
+
+        // Solution
         SearchNode current = queue.delMin();
         while (!current.board.isGoal()) {
+            boolean isSolvable = true;
             for (SearchNode neighbor : current.neighbors()) {
-                // if (neighbor.previous.board.equals(current.board)) {
-                //     continue;
-                // }
+                if (neighbor.board.twin().isGoal()) {
+                    isSolvable = false;
+                    break;
+                }
                 queue.insert(neighbor);
             }
+            if (!isSolvable) {
+                break;
+            }
             current = queue.delMin();
-            boardStates.add(current.board);
+            solutionBoards.add(current.board);
         }
+        return solutionBoards;
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        return true;
+        return boardStates.get(boardStates.size() - 1).isGoal();
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-        return boardStates.size();
+        if (isSolvable()) {
+            return boardStates.size() - 1;
+        } else {
+            return -1;
+        }
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
@@ -47,33 +60,46 @@ public class Solver {
     }
 
     private static class SearchNode implements Comparable<SearchNode> {
-        Board board;
-        private int moves;
+        final Board board;
+        private final int moves;
         private final SearchNode previous;
+        private final int manhattan;
 
         public SearchNode(Board board) {
-            this.board = board;
-            this.moves = 0;
-            this.previous = null;
+            this(board, 0, null);
         }
 
         public SearchNode(Board board, int moves, SearchNode previous) {
             this.board = board;
+            this.manhattan = board.manhattan();
             this.moves = moves;
             this.previous = previous;
         }
 
         public List<SearchNode> neighbors() {
             List<SearchNode> nodes = new ArrayList<>();
-            for (Board b : board.neighbors()) {
-                nodes.add(new SearchNode(b, 1, this));
+            for (Board neighborBoard : board.neighbors()) {
+                if (previous != null && previous.board.equals(neighborBoard)) {
+                    continue;
+                }
+                nodes.add(new SearchNode(neighborBoard, this.moves + 1, this));
             }
             return nodes;
         }
 
         @Override
         public int compareTo(SearchNode other) {
-            return Integer.compare(this.board.manhattan(), other.board.manhattan());
+            return Integer.compare(
+                    this.manhattan + this.moves,
+                    other.manhattan + other.moves
+            );
+        }
+
+        @Override
+        public String toString() {
+            return "SearchNode{" +
+                    "board=" + board +
+                    '}';
         }
     }
 
