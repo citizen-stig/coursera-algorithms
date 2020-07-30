@@ -27,15 +27,9 @@ public class BoardTest {
     }
 
     @Test
-    void testToStringLarge() {
+    void testToString100() {
         int n = 10;
-        int limit = n * n;
-        int[][] b = new int[n][n];
-        for (int tile = 1; tile <= limit; tile++) {
-            int i = (tile - 1) / n;
-            int j = (tile - 1) % n;
-            b[i][j] = tile % limit;
-        }
+        int[][] b = generateBoard(n);
         Board board = new Board(b);
         assertEquals("10\n 1  2  3  4  5  6  7  8  9 10\n" +
                 "11 12 13 14 15 16 17 18 19 20\n" +
@@ -47,6 +41,36 @@ public class BoardTest {
                 "71 72 73 74 75 76 77 78 79 80\n" +
                 "81 82 83 84 85 86 87 88 89 90\n" +
                 "91 92 93 94 95 96 97 98 99  0\n", board.toString());
+    }
+
+    @Test
+    void testToString127() {
+        int n = 12;
+        int[][] b = generateBoard(n);
+        Board board = new Board(b);
+        assertEquals("12\n" +
+                "  1   2   3   4   5   6   7   8   9  10  11  12\n" +
+                " 13  14  15  16  17  18  19  20  21  22  23  24\n" +
+                " 25  26  27  28  29  30  31  32  33  34  35  36\n" +
+                " 37  38  39  40  41  42  43  44  45  46  47  48\n" +
+                " 49  50  51  52  53  54  55  56  57  58  59  60\n" +
+                " 61  62  63  64  65  66  67  68  69  70  71  72\n" +
+                " 73  74  75  76  77  78  79  80  81  82  83  84\n" +
+                " 85  86  87  88  89  90  91  92  93  94  95  96\n" +
+                " 97  98  99 100 101 102 103 104 105 106 107 108\n" +
+                "109 110 111 112 113 114 115 116 117 118 119 120\n" +
+                "121 122 123 124 125 126 127 128 129 130 131 132\n" +
+                "133 134 135 136 137 138 139 140 141 142 143   0\n", board.toString());
+    }
+
+    @Test
+    void testToStringSuperLarge() {
+        int n = 105;
+        int[][] b = generateBoard(n);
+        Board board = new Board(b);
+        assertEquals("105\n" +
+                "    1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16 ",
+                board.toString().substring(0, 100));
     }
 
     @Test
@@ -116,11 +140,22 @@ public class BoardTest {
 
     @Test
     void testTwin() {
-        Board source = new Board(correctBoard);
-        for (int i = 0; i <100 ; i++) {
+
+        Board source = new Board(generateBoard(100));
+        for (int i = 0; i < 1000 ; i++) {
             Board twin = source.twin();
             assertNotEquals(source, twin);
         }
+    }
 
+    int[][] generateBoard(int n) {
+        int limit = n * n;
+        int[][] board = new int[n][n];
+        for (int tile = 1; tile <= limit; tile++) {
+            int i = (tile - 1) / n;
+            int j = (tile - 1) % n;
+            board[i][j] = tile % limit;
+        }
+        return board;
     }
 }

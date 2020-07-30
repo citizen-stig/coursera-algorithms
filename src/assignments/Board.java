@@ -9,13 +9,18 @@ public class Board {
     private final int[][] tiles;
     private int zeroI;
     private int zeroJ;
+    private int twinFromI;
+    private int twinFromJ;
+    private int twinToI;
+    private int twinToJ;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         this.tiles = new int[tiles.length][tiles.length];
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles.length; j++) {
+        int n = tiles.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 this.tiles[i][j] = tiles[i][j];
                 if (tiles[i][j] == 0) {
                     this.zeroI = i;
@@ -23,13 +28,26 @@ public class Board {
                 }
             }
         }
+
+        do {
+            this.twinFromI = StdRandom.uniform(n);
+            this.twinFromJ = StdRandom.uniform(n);
+            this.twinToI = StdRandom.uniform(n);
+            this.twinToJ = StdRandom.uniform(n);
+        } while ((tiles[twinFromI][twinFromJ] == 0) || (tiles[twinToI][twinToJ] == 0) || (twinFromI == twinToI && twinFromJ == twinToJ));
     }
 
     // string representation of this board
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String firstColTemplate = "%1$2s";
-        String regularTemplate = "%1$3s";
+        int padding = 3;
+        int limit = tiles.length * tiles.length - 1;
+        int sqrLen = Integer.toString(limit).length();
+        if (sqrLen >= 3) {
+            padding = sqrLen + 1;
+        }
+        String firstColTemplate = "%1$" + (padding - 1) + "s";
+        String regularTemplate = "%1$" + padding + "s";
         builder.append(String.format("%s\n", dimension()));
         for (int[] row : tiles) {
             for (int j = 0; j < tiles.length; j++) {
@@ -131,14 +149,7 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int fromI, fromJ, toI, toJ;
-        do {
-            fromI = StdRandom.uniform(dimension());
-            fromJ = StdRandom.uniform(dimension());
-            toI = StdRandom.uniform(dimension());
-            toJ = StdRandom.uniform(dimension());
-        } while ((tiles[fromI][fromJ] == 0) || (tiles[toI][toJ] == 0) || (fromI == toI && fromJ == toJ));
-        return swapTiles(fromI, fromJ, toI, toJ);
+        return swapTiles(twinFromI, twinFromJ, twinToI, twinToJ);
     }
 
     private Board swapTiles(int fromI, int fromJ, int toI, int toJ) {
@@ -146,9 +157,9 @@ public class Board {
         for (int i = 0; i < tiles.length; i++) {
             System.arraycopy(tiles[i], 0, newBoard[i], 0, tiles.length);
         }
-        int tile = tiles[toI][toJ];
-        newBoard[toI][toJ] = 0;
-        newBoard[fromI][fromJ] = tile;
+        int toTile = tiles[toI][toJ];
+        newBoard[toI][toJ] = newBoard[fromI][fromJ];
+        newBoard[fromI][fromJ] = toTile;
         return new Board(newBoard);
     }
 
